@@ -1,0 +1,48 @@
+{{$args := parseArgs 2 "Kullanım: -uyarıkaldır @kullanıcı [uyarı_no|hepsi]" 
+  (carg "user" "Kullanıcı") (carg "string" "Uyarı numarası veya hepsi")}}
+{{$target := $args.Get 0}}
+{{$choice := lower ($args.Get 1)}}
+{{$yetkiliRolID :=  }} //You should add your mod role id
+
+{{if not (hasRoleID $yetkiliRolID)}}
+  Bu komutu kullanmak için yetkiniz yok.
+  {{return}}
+{{end}}
+
+{{$existing := dbGet $target.ID "sicil"}}
+{{if not $existing}}
+  {{$target.Username}} kullanıcısının uyarısı bulunmamaktadır.
+  {{return}}
+{{end}}
+
+{{$entries := split $existing.Value "\n"}}
+
+{{if eq $choice "hepsi"}}
+  {{dbDel $target.ID "sicil"}}
+  ✅ {{$target.Username}} kullanıcısının tüm uyarıları kaldırıldı.
+  {{return}}
+{{end}}
+
+{{$index := toInt $choice}}
+{{if or (lt $index 1) (gt $index (len $entries))}}
+  Lütfen geçerli bir uyarı numarası veya 'hepsi' yazınız.
+  {{return}}
+{{end}}
+
+{{$newEntries := cslice}}
+
+{{range $i, $entry := $entries}}
+  {{if ne (add $i 1) $index}}
+    {{if ne (len $entry) 0}} {{/* boş değilse ekle */}}
+      {{$newEntries = $newEntries.Append $entry}}
+    {{end}}
+  {{end}}
+{{end}}
+
+{{if eq (len $newEntries) 0}}
+  {{dbDel $target.ID "sicil"}}
+{{else}}
+  {{dbSet $target.ID "sicil" (joinStr "\n" $newEntries)}}
+{{end}}
+
+✅ {{$target.Username}} kullanıcısının {{$index}}. uyarısı kaldırıldı.

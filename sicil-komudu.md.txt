@@ -1,0 +1,39 @@
+# Sicil Komutu
+
+```gotemplate
+{{$args := parseArgs 1 "Kullanım: -sicil [@kullanıcı]" (carg "user" "Kullanıcı")}}
+{{$target := $args.Get 0}}
+{{$yetkiliRolID := }} //You should add your basic Mod role id
+
+
+
+{{if and (ne $target.ID .User.ID) (not (hasRoleID $yetkiliRolID))}}
+  Sadece kendi siciline bakabilirsin.
+  {{return}}
+{{end}}
+
+{{$data := dbGet $target.ID "sicil"}}
+
+{{if not $data}}
+  {{if eq $target.ID .User.ID}}
+    {{sendDM "Sicilin temiz."}}
+    Sicilin DM ile yollandı.
+  {{else}}
+    Bu kullanıcının sicili temiz.
+  {{end}}
+  {{return}}
+{{end}}
+
+{{$entries := split $data.Value "\n"}}
+{{$count := len $entries}}
+{{$message := print "⭐ " $target.Username " kullanıcısının sicili (" $count "):\n"}}
+{{range $i, $entry := $entries}}
+  {{$message = print $message (add $i 1) ". " $entry "\n"}}
+{{end}}
+
+{{if eq $target.ID .User.ID}}
+  {{sendDM $message}}
+  Sicilin DM ile yollandı.
+{{else}}
+  {{$message}}
+{{end}}

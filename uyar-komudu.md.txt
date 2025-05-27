@@ -1,0 +1,20 @@
+{{if not (hasRoleID )}} //You should enter your basic mod role id
+  Bu komutu kullanmak için yetkiniz yok.
+  {{return}}
+{{end}}
+
+{{$args := parseArgs 2 "Kullanım: -uyar @kullanıcı sebep" (carg "user" "Kullanıcı") (carg "string" "Sebep")}}
+{{$target := $args.Get 0}}
+{{$reason := $args.Get 1}}
+
+{{$now := currentTime.Format "02.01.2006"}}
+{{$newEntry := print "**" .User.Username "** tarafından: " $reason " - (" $now ")" }}
+
+{{$existing := dbGet $target.ID "sicil"}}
+{{if $existing}}
+  {{dbSet $target.ID "sicil" (print $existing.Value "\n" $newEntry)}}
+{{else}}
+  {{dbSet $target.ID "sicil" $newEntry}}
+{{end}}
+
+✅ **{{$target.Username}}** uyarıldı: _"{{$reason}}"_
