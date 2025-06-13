@@ -15,7 +15,7 @@ Discord sunucunuzda düzeni sağlamak ve üyelerin geçmiş uyarılarını yöne
 - `dbSet`, `dbGet`, `sendDM`, `hasRoleID` gibi özel işlevler kullanılmıştır.
 
 ## 👤 Geliştirici
-**Exadus (aka Umut)**  
+**Exaadus (aka Umut)**  
 🧠 Kodlama, sistem tasarımı ve moderasyon sistemlerinde uzmanlaşmış bir Discord geliştiricisi.
 
 ---
@@ -39,7 +39,7 @@ You're in the right place!
 - Uses built-in functions like `dbSet`, `dbGet`, `sendDM`, `hasRoleID`.
 
 ## 👤 Developer
-**Exadus (aka Umut)**  
+**Exaadus (aka Umut)**  
 🧠 Specializes in moderation bots, system design, and Discord automation.
 
 ---
